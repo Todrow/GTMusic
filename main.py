@@ -1,2 +1,2 @@
 print('Hello world!')
-print('Kolia lox')
+print('SlaVA lox')
