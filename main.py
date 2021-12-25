@@ -46,6 +46,7 @@ class Client(discord.Client):
             vc = await voice_channel.connect()
         except:
             print('Already have connected or cannot connect to the server.')
+            return
 
         if vc.is_playing():
             pass
