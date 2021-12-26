@@ -146,8 +146,20 @@ class Client(discord.Client):
                 pass
 
         elif compare("^!help", message.content):
-            await self.sent_message("I know such commands as:\n1. !play smth - {!p - is the same} I will add the song you want to the queue. Instead of 'smth' you should write the url to a video on YouTube, or the name of playlist.\n2. !queue - I will show the queue.\n3. !skip - I will skip the current song.\n4. !help - It's a help.\n5. !dis - I will disconnect from server and clear queue.\n6. !playlists - {!pls is the same} I will show all playlists that I know.\n6.1 !playlists name - I will show the list of songs of necessary playlist. Instead of 'name' put the name of playlist.\n6.2 !playlists add name - I will make a new playlist. Instead of 'name' put the name of playlist.\n6.3 !playlists update url name - I will add a song to a playlist. Instead of 'url' put the url to a song, instead of 'name' put the name of playlist.")
-
+            await self.sent_message(
+"""I know such commands as:
+1. !play smth - {!p - is the same} I will add the song you want to the queue. Instead of 'smth' you should write the url to a video on YouTube, or the name of the playlist, or the name of the song.
+2. !queue - I will show the queue.
+3. !skip - I will skip the current song.
+4. !help - It's a help.
+5. !dis - I will disconnect from server and clear queue.
+6. !playlists - {!pls is the same} I will show all playlists that I know.
+6.1 !playlists name - I will show the list of songs of necessary playlist. Instead of 'name' put the name of playlist.
+6.2 !playlists add name - I will make a new playlist. Instead of 'name' put the name of playlist.
+6.3 !playlists update url name - I will add a song to a playlist. Instead of 'url' put the url to a song, instead of 'name' put the name of playlist.
+7. !pause - I will pause the current song.
+8. !resume - I will resume the current song."""
+            )
         elif compare("^!playlists", message.content) or compare("^!pls", message.content):
             if compare("^!playlists add *", message.content) or compare("^!pls add *", message.content):
                 try:
