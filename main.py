@@ -12,14 +12,7 @@ TEXT_SERVER_ID = 760581470565433425
 YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist':'False'}
 FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
 
-# try:
-#     with open("playlists.txt", "r") as pl:
-#         print(pl.read()[:-1])
-#         PLAYLISTS = dict(pl.read()[:-1])
-# except:
-#     PLAYLISTS = {}
-# print(PLAYLISTS)
-
+# Here we put reading from a playlist.
 PLAYLISTS = {"dich": ["https://www.youtube.com/watch?v=MHW3TvCVeq4", "https://www.youtube.com/watch?v=jQr44O7_s6s"]}
 
 queue = []
@@ -44,12 +37,12 @@ class Client(discord.Client):
     async def play(self, voice_channel):
         global vc, queue
 
-        print(f"Playing to {voice_channel}")
+        print(f"[INFO] laying to {voice_channel}")
 
         try:
             vc = await voice_channel.connect()
         except:
-            print('Already have connected or cannot connect to the server.')
+            print('[WARNING] Already have connected or cannot connect to the server.')
             if not vc: return
 
         if vc.is_playing():
@@ -86,7 +79,6 @@ class Client(discord.Client):
             if compare("^!play http*", message.content) or compare("^!p http*", message.content):
                 url = message.content.split()[1]
                 await self.queue(url)
-                #await self.play(url, message.author.voice.channel)
             else:
                 try:
                     playlist = PLAYLISTS[" ".join(message.content.split()[1:])]
@@ -122,23 +114,40 @@ class Client(discord.Client):
                 pass
 
         elif compare("^!help", message.content):
-            await self.sent_message("I know such commands as:\n1. !play smth - I will add the song you want to the queue. Instead of 'smth' you should write the url to a video on YouTube, or the name of playlist.\n2. !queue - I will show the queue.\n3. !skip - I will skip the current song.\n4. !help - It's a help.\n5. !dis - I will disconnect from server and clear queue.")
+            await self.sent_message("I know such commands as:\n1. !play smth - {!p - is the same} I will add the song you want to the queue. Instead of 'smth' you should write the url to a video on YouTube, or the name of playlist.\n2. !queue - I will show the queue.\n3. !skip - I will skip the current song.\n4. !help - It's a help.\n5. !dis - I will disconnect from server and clear queue.\n6. !playlists - {!pls is the same} I will show all playlists that I know.\n6.1 !playlists name - I will show the list of songs of necessary playlist. Instead of 'name' put the name of playlist.\n6.2 !playlists add name - I will make a new playlist. Instead of 'name' put the name of playlist.\n6.3 !playlists update url name - I will add a song to a playlist. Instead of 'url' put the url to a song, instead of 'name' put the name of playlist.")
 
-            """
-            elif compare("^!playlists", message.content):
-                if compare("^!playlists add *", message.content):
-                    pass
+        elif compare("^!playlists", message.content) or compare("^!pls", message.content):
+            if compare("^!playlists add *", message.content) or compare("^!pls add *", message.content):
+                try:
+                    playlist = " ".join(message.content.split()[2:])
+                    if playlist[:6] == "https:": a=1/0
+                    PLAYLISTS.update({playlist: []})
+                    # Here we put adding to JSON
+                except:
+                    print("[ERROR] Something got wrong while adding a playlist.")
 
+            elif compare("^!playlists update *", message.content) or compare("^!pls update *", message.content):
+                try:
                     url = message.content.split()[2]
                     playlist = " ".join(message.content.split()[3:])
                     PLAYLISTS[playlist].append(url)
-                    with open("playlists.txt", "w") as pl:
-                        pl.write(str(PLAYLISTS))
+                except:
+                    print("[ERROR] Something got wrong while adding a song to a playlist.")
 
-                else:
-                    result = "/n".join([str(i+1)+". "+name for i, name in enumerate(PLAYLISTS.keys())])
-                    await self.sent_message("I know such playlists as:\n" + result)
-            """
+            elif compare("^!playlists \w*", message.content) or compare("^!pls \w*", message.content):
+                try:
+                    playlist = " ".join(message.content.split()[1:])
+                    plst = PLAYLISTS[playlist]
+                    result = " \n".join([str(i+1)+". "+name for i, name in enumerate(plst)])
+                    await self.sent_message(f"In {playlist} there are:\n" + result)
+
+                except:
+                    print("[ERROR] Something got wrong while showing a playlist.")
+
+            else:
+                result = "\n".join([str(i+1)+". "+name for i, name in enumerate(PLAYLISTS.keys())])
+                await self.sent_message("I know such playlists as:\n" + result)
+
         else:
             await self.sent_message("Нихуя не понял, но очень интересно. Что бы узнать какие есть комманды введи !help.")
 
