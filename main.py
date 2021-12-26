@@ -56,31 +56,34 @@ class Client(discord.Client):
             pass
         else:
             while len(queue) > 0:
-                URL = queue[0]
-                with YoutubeDL(YDL_OPTIONS) as ydl:
-                    info = ydl.extract_info(URL, download=False)
-
-                url = info['formats'][0]['url']
-
-                vc.play(discord.FFmpegPCMAudio(executable=BASE_DIR+"ffmpeg\\ffmpeg.exe", source = url, **FFMPEG_OPTIONS))
-
-                await self.sent_message(f"Now playing: {URL}")
-                self.now_playing = URL
-
-                while vc.is_playing():
-                    await sleep(1)
                 try:
-                    queue = queue[1:]
-                except:
-                    pass
+                    URL = queue[0]
+                    with YoutubeDL(YDL_OPTIONS) as ydl:
+                        info = ydl.extract_info(URL, download=False)
+
+                    url = info['formats'][0]['url']
+
+                    vc.play(discord.FFmpegPCMAudio(executable=BASE_DIR+"ffmpeg\\ffmpeg.exe", source = url, **FFMPEG_OPTIONS))
+
+                    await self.sent_message(f"Now playing: {URL}")
+                    self.now_playing = URL
+
+                    while vc.is_playing():
+                        await sleep(1)
+                except: pass
+                finally:
+                    try:
+                        queue = queue[1:]
+                    except:
+                        pass
             if not vc.is_paused():
                 await vc.disconnect()
 
     async def docommand(self, message):
         global queue, vc
 
-        if compare("^!play ", message.content):
-            if compare("^!play http*", message.content):
+        if compare("^!play ", message.content) or compare("^!p ", message.content):
+            if compare("^!play http*", message.content) or compare("^!p http*", message.content):
                 url = message.content.split()[1]
                 await self.queue(url)
                 #await self.play(url, message.author.voice.channel)
