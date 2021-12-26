@@ -57,7 +57,7 @@ class Client(discord.Client):
             if not vc: return
 
         if vc.is_playing():
-            pass
+            print("[WARNING] Vc is playing but you try to start it again.")
         else:
             while len(queue) > 0:
                 try:
@@ -66,12 +66,10 @@ class Client(discord.Client):
                         info = ydl.extract_info(URL, download=False)
 
                     url = info['formats'][0]['url']
-
                     vc.play(discord.FFmpegPCMAudio(executable=BASE_DIR+"ffmpeg\\ffmpeg.exe", source = url, **FFMPEG_OPTIONS))
 
                     await self.sent_message(f"Now playing: {URL}")
                     self.now_playing = URL
-
                     while vc.is_playing() or vc.is_paused():
                         await sleep(1)
                 except:
@@ -110,7 +108,10 @@ class Client(discord.Client):
                 if not vc.is_playing():
                     await self.play(message.author.voice.channel)
             except:
-                await self.play(message.author.voice.channel)
+                try:
+                    await self.play(message.author.voice.channel)
+                except:
+                    print("[ERROR] Something went wrong while connecting to a voie channel.")
 
         elif compare("^!queue", message.content):
             if len(queue) == 0:
@@ -120,11 +121,10 @@ class Client(discord.Client):
 
         elif compare("^!dis", message.content):
             try:
+                queue = []
                 await vc.stop()
                 await vc.disconnect()
-                queue = []
-            except:
-                pass
+            except: pass
 
         elif compare("^!skip", message.content):
             try:
