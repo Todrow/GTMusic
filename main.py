@@ -10,7 +10,7 @@ from FindMusic import get_video
 BASE_DIR = os.path.split(os.path.abspath(__file__))[0] + "\\"
 
 
-TEXT_SERVER_ID = 760581470565433425
+# TEXT_SERVER_ID = 760581470565433425
 
 YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist':'False'}
 FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
@@ -187,7 +187,10 @@ class Client(discord.Client):
             await self.sent_message("Нихуя не понял, но очень интересно. Что бы узнать какие есть комманды введи !help.")
 
     async def sent_message(self, text):
-        await self.get_channel(TEXT_SERVER_ID).send(text)
+        try:
+            await self.text_channel.send(text)
+        except:
+            print("[ERROR] Cannot connect to unidentified text channel.")
 
     async def on_ready(self):
         print("Hello")
@@ -195,7 +198,7 @@ class Client(discord.Client):
     async def on_message(self, message):
         if (message.author != self.user):
             self.actions = {r"^!*": self.docommand} # Put here function that will execute if needed message will be received
-
+            self.text_channel = message.channel
             """
             Example:
 
