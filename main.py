@@ -4,6 +4,8 @@ import re
 from youtube_dl import YoutubeDL
 from asyncio import sleep
 import os
+from FindMusic import get_video
+
 
 BASE_DIR = os.path.split(os.path.abspath(__file__))[0] + "\\"
 
@@ -94,7 +96,12 @@ class Client(discord.Client):
                     for song in playlist:
                         await self.queue(song)
                 except:
-                    await self.sent_message("No such playlist")
+                    # https://www.youtube.com/results?search_query=
+                    name = " ".join(message.content.split()[1:])
+                    song = get_video(name)
+                    await self.queue(song)
+                    # Here we put finding song by name
+                    #await self.sent_message("No such playlist")
             try:
                 if not vc.is_playing():
                     await self.play(message.author.voice.channel)
@@ -172,6 +179,7 @@ class Client(discord.Client):
     async def on_message(self, message):
         if (message.author != self.user):
             self.actions = {r"^!*": self.docommand} # Put here function that will execute if needed message will be received
+
             """
             Example:
 
@@ -181,7 +189,6 @@ class Client(discord.Client):
             Make sure that the only one argument that will be given to the function will
             be the message, that called a function.
             """
-
             text = message.content
             for key, value in self.actions.items():
                 if compare(key, text):
