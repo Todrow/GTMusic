@@ -74,14 +74,18 @@ class Client(discord.Client):
 
                     while vc.is_playing():
                         await sleep(1)
-                except: pass
+                except:
+                    await self.sent_message("I can`t do this!")
                 finally:
                     try:
                         queue = queue[1:]
                     except:
                         pass
-            if not vc.is_paused():
-                await vc.disconnect()
+            try:
+                if not vc.is_paused():
+                    await vc.disconnect()
+            except:
+                await self.sent_message("I can`t do this!")
 
     async def docommand(self, message):
         global queue, vc
