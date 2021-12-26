@@ -72,7 +72,7 @@ class Client(discord.Client):
                     await self.sent_message(f"Now playing: {URL}")
                     self.now_playing = URL
 
-                    while vc.is_playing():
+                    while vc.is_playing() or vc.is_paused():
                         await sleep(1)
                 except:
                     await self.sent_message("I can`t do this!")
@@ -130,6 +130,18 @@ class Client(discord.Client):
             try:
                 await vc.stop()
                 queue = queue[1:]
+            except:
+                pass
+
+        elif compare("^!pause", message.content):
+            try:
+                await vc.pause()
+            except:
+                pass
+
+        elif compare("^!resume", message.content):
+            try:
+                await vc.resume()
             except:
                 pass
 
