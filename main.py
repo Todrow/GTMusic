@@ -7,7 +7,7 @@ import os
 BASE_DIR = os.path.split(os.path.abspath(__file__))[0] + "\\"
 
 
-TEXT_SERVER_ID = 924019353203142736
+TEXT_SERVER_ID = 760581470565433425
 
 YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist':'False'}
 FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
@@ -34,11 +34,11 @@ def compare(r, text):
 # Making Client class
 class Client(discord.Client):
     async def queue(self, url):
-        try:
-            if queue[0] == url:
-                await self.sent_message("This song is already on queue.")
-                return
-        except: pass
+        # try:
+        #     if queue[0] == url:
+        #         await self.sent_message("This song is already on queue.")
+        #         return
+        # except: pass
         queue.append(url)
 
     async def play(self, voice_channel):
