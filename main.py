@@ -1,3 +1,4 @@
+import json
 import discord
 import re
 from youtube_dl import YoutubeDL
@@ -12,13 +13,15 @@ TEXT_SERVER_ID = 760581470565433425
 YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist':'False'}
 FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
 
+PLAYLISTS = {'dich1': ['https://youtu.be/fV7LbEddw_w?list=RDm6crKedLeRg', 'https://www.youtube.com/watch?v=m6crKedLeRg&list=RDm6crKedLeRg&index=1'], 'dich2': ['https://www.youtube.com/watch?v=zPCsplUBlYY&list=RDm6crKedLeRg&index=2']}
 
 def readJSON():
     with open('./playlists/playlists.json', 'r') as read_file:
-        PLAYLISTS = json.load(read_file)
+        return json.load(read_file)
 
-def writeJSON():
-
+def writeJSON(playlists):
+    with open('./playlists/playlists.json', 'w') as write_file:
+        json.dump(playlists, write_file)
 
 queue = []
 
