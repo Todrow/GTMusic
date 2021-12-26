@@ -20,7 +20,13 @@ FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconne
 #     PLAYLISTS = {}
 # print(PLAYLISTS)
 
-PLAYLISTS = {"dich": ["https://www.youtube.com/watch?v=MHW3TvCVeq4", "https://www.youtube.com/watch?v=jQr44O7_s6s"]}
+def readJSON():
+    with open('./playlists/playlists.json', 'r') as read_file:
+        PLAYLISTS = json.load(read_file)
+
+def writeJSON():
+    
+
 
 queue = []
 
