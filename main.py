@@ -23,6 +23,7 @@ def writeJSON(playlists):
     with open('./playlists/playlists.json', 'w') as write_file:
         json.dump(playlists, write_file)
 
+PLAYLISTS = readJSON()
 queue = []
 
 
@@ -45,7 +46,7 @@ class Client(discord.Client):
     async def play(self, voice_channel):
         global vc, queue
 
-        print(f"[INFO] laying to {voice_channel}")
+        print(f"[INFO] playing to {voice_channel}")
 
         try:
             vc = await voice_channel.connect()
@@ -130,7 +131,8 @@ class Client(discord.Client):
                     playlist = " ".join(message.content.split()[2:])
                     if playlist[:6] == "https:": a=1/0
                     PLAYLISTS.update({playlist: []})
-                    # Here we put adding to JSON
+
+                    writeJSON(PLAYLISTS)
                 except:
                     print("[ERROR] Something got wrong while adding a playlist.")
 
@@ -139,6 +141,8 @@ class Client(discord.Client):
                     url = message.content.split()[2]
                     playlist = " ".join(message.content.split()[3:])
                     PLAYLISTS[playlist].append(url)
+
+                    writeJSON(PLAYLISTS)
                 except:
                     print("[ERROR] Something got wrong while adding a song to a playlist.")
 
