@@ -1,3 +1,4 @@
+import json
 import discord
 import re
 from youtube_dl import YoutubeDL
@@ -16,10 +17,11 @@ PLAYLISTS = {}
 
 def readJSON():
     with open('./playlists/playlists.json', 'r') as read_file:
-        PLAYLISTS = json.load(read_file)
+        return json.load(read_file)
 
-def writeJSON():
-    pass
+def writeJSON(playlists):
+    with open('./playlists/playlists.json', 'w') as write_file:
+        json.dump(playlists, write_file)
 
 queue = []
 
