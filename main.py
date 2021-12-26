@@ -2,6 +2,9 @@ import discord
 import re
 from youtube_dl import YoutubeDL
 from asyncio import sleep
+import os
+
+BASE_DIR = os.path.split(os.path.abspath(__file__))[0] + "\\"
 
 
 TEXT_SERVER_ID = 924019353203142736
@@ -20,6 +23,7 @@ FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconne
 PLAYLISTS = {"dich": ["https://www.youtube.com/watch?v=MHW3TvCVeq4", "https://www.youtube.com/watch?v=jQr44O7_s6s"]}
 
 queue = []
+
 
 def compare(r, text):
     match = re.match(r, str(text))
@@ -46,7 +50,7 @@ class Client(discord.Client):
             vc = await voice_channel.connect()
         except:
             print('Already have connected or cannot connect to the server.')
-            return
+            if not vc: return
 
         if vc.is_playing():
             pass
@@ -58,7 +62,7 @@ class Client(discord.Client):
 
                 url = info['formats'][0]['url']
 
-                vc.play(discord.FFmpegPCMAudio(executable="ffmpeg\\ffmpeg.exe", source = url, **FFMPEG_OPTIONS))
+                vc.play(discord.FFmpegPCMAudio(executable=BASE_DIR+"ffmpeg\\ffmpeg.exe", source = url, **FFMPEG_OPTIONS))
 
                 await self.sent_message(f"Now playing: {URL}")
                 self.now_playing = URL
@@ -139,7 +143,7 @@ class Client(discord.Client):
         await self.get_channel(TEXT_SERVER_ID).send(text)
 
     async def on_ready(self):
-        print("Started.")
+        print("Hello")
 
     async def on_message(self, message):
         if (message.author != self.user):
