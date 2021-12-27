@@ -10,7 +10,7 @@ from FindMusic import get_video
 BASE_DIR = os.path.split(os.path.abspath(__file__))[0] + "\\"
 
 
-# TEXT_SERVER_ID = 760581470565433425
+TEXT_SERVER_ID = 760581470565433425
 
 YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist':'False'}
 FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
@@ -37,6 +37,10 @@ def compare(r, text):
 
 # Making Client class
 class Client(discord.Client):
+    def __init__(self, server):
+        super(Client, self).__init__()
+        self.server = server;
+
     async def queue(self, url):
         # try:
         #     if queue[0] == url:
@@ -208,7 +212,7 @@ class Client(discord.Client):
         print("Hello")
 
     async def on_message(self, message):
-        if (message.author != self.user):
+        if (message.author != self.user and self.get_channel(TEXT_SERVER_ID) == message.channel):
             self.actions = {r"^!*": self.docommand} # Put here function that will execute if needed message will be received
             self.text_channel = message.channel
             """
@@ -229,5 +233,5 @@ class Client(discord.Client):
 with open("C:/key/key.txt", "r") as f: token = f.read();
 
 # Starting client
-client = Client()
+client = Client("Server")
 client.run(token)
